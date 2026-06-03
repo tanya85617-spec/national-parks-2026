@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 國家公園研討會｜各國治理架構 × 保護區介紹</title>
+<style>
+  :root {
+    --blue-dark: #1F3864;
+    --blue-mid: #2E75B6;
+    --blue-light: #D6E4F0;
+    --green: #2E7D32;
+    --green-light: #E8F5E9;
+    --amber: #F57F17;
+    --amber-light: #FFF8E1;
+    --gray: #555;
+    --border: #ddd;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Noto Sans TC", "Helvetica Neue", sans-serif; background: #f5f7fa; color: #222; font-size: 14px; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--blue-dark);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky; top: 0; z-index: 100;
+    flex-wrap: wrap;
+  }
+  nav .brand { padding: 12px 20px; font-weight: 700; font-size: 15px; white-space: nowrap; }
+  nav .tabs { display: flex; flex-wrap: wrap; }
+  nav button {
+    background: none; border: none; color: rgba(255,255,255,0.7);
+    padding: 14px 18px; cursor: pointer; font-size: 13px;
+    border-bottom: 3px solid transparent; transition: all .2s;
+  }
+  nav button:hover, nav button.active { color: #fff; border-bottom-color: #7EC8F0; }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── PAGE WRAPPER ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+  .page-title { font-size: 22px; font-weight: 700; color: var(--blue-dark); margin-bottom: 6px; }
+  .page-sub { color: var(--gray); margin-bottom: 28px; font-size: 13px; }
+
+  /* ── COUNTRY SECTION ── */
+  .country-block { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.07); margin-bottom: 32px; overflow: hidden; }
+  .country-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px; background: var(--blue-dark); color: #fff;
+  }
+  .country-header .flag { font-size: 26px; }
+  .country-header .name { font-size: 17px; font-weight: 700; }
+  .country-header .note { font-size: 12px; opacity: .75; margin-top: 2px; }
+  .country-body { padding: 20px; }
+
+  /* ── ORG TREE ── */
+  .org-tree { overflow-x: auto; padding-bottom: 8px; }
+  .tree-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .tree-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+  }
+  /* Box */
+  .box {
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    white-space: pre-line;
+    min-width: 110px;
+    max-width: 200px;
+    margin: 0 6px;
+    position: relative;
+  }
+  .box.L0 { background: var(--blue-dark); color: #fff; font-weight: 700; font-size: 13px; }
+  .box.L1 { background: var(--blue-mid); color: #fff; font-weight: 600; }
+  .box.L2 { background: var(--blue-light); color: var(--blue-dark); border: 1px solid #aac4dd; }
+  .box.L3 { background: #f0f4f8; color: #333; border: 1px solid var(--border); font-size: 11px; }
+  .box.local { background: #FFF3CD; border: 1px solid #FFCA28; color: #5a4100; }
+  .box.green { background: var(--green-light); border: 1px solid #81C784; color: var(--green); }
+  .box.amber { background: var(--amber-light); border: 1px solid #FFB74D; color: #7a4f00; }
+
+  /* Connector lines */
+  .v-line { width: 2px; height: 18px; background: #aaa; margin: 0 auto; }
+  .h-group {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+  }
+  .h-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    /* overridden per usage */
+  }
+  .branch-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* horizontal bar above branches */
+  .h-bar-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
+  .h-bar {
+    height: 2px;
+    background: #aaa;
+    position: absolute;
+    top: 0;
+  }
+  .branch-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 6px;
+  }
+  .branch-top-line { width: 2px; height: 18px; background: #aaa; }
+
+  /* ── SECTION LABEL ── */
+  .sec-label { font-size: 12px; font-weight: 700; color: var(--blue-mid); text-transform: uppercase; letter-spacing: .5px; margin: 16px 0 8px; }
+
+  /* ── NOTES ── */
+  .note-list { list-style: none; margin-top: 10px; }
+  .note-list li { padding: 4px 0 4px 16px; position: relative; font-size: 13px; color: #444; }
+  .note-list li::before { content: "▸"; position: absolute; left: 0; color: var(--blue-mid); }
+
+  /* ── PARKS PANEL ── */
+  .parks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .park-card {
+    background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .park-card-header {
+    background: var(--blue-dark); color: #fff;
+    padding: 14px 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .park-card-header .flag { font-size: 22px; }
+  .park-card-header .info .park-name { font-size: 15px; font-weight: 700; }
+  .park-card-header .info .park-name-en { font-size: 11px; opacity: .8; margin-top: 2px; }
+  .park-card-body { padding: 14px 16px; flex: 1; }
+  .park-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tag {
+    font-size: 11px; border-radius: 20px; padding: 2px 10px;
+    font-weight: 600; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .tag.loc { background: #E3F2FD; color: #1565C0; }
+  .tag.area { background: #F3E5F5; color: #6A1B9A; }
+  .tag.cat { background: #E8F5E9; color: #2E7D32; }
+  .tag.gl { background: #FFF8E1; color: #E65100; }
+  .park-desc { font-size: 13px; color: #444; line-height: 1.6; margin-bottom: 10px; }
+  .species-title { font-size: 12px; font-weight: 700; color: var(--blue-mid); margin-bottom: 4px; }
+  .species-list { list-style: none; }
+  .species-list li { font-size: 12px; color: #555; padding: 2px 0 2px 14px; position: relative; }
+  .species-list li::before { content: "🐾"; position: absolute; left: 0; font-size: 11px; }
+  .park-img-placeholder {
+    background: linear-gradient(135deg, #e3f0fb 0%, #c5dff5 100%);
+    height: 90px; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #7a9cb5; flex-direction: column; gap: 4px;
+    border-top: 1px solid #dde8f0;
+  }
+  .park-img-placeholder .icon { font-size: 28px; }
+
+  /* ── SESSION BADGE ── */
+  .session-badge {
+    display: inline-block; font-size: 10px; background: var(--blue-mid);
+    color: #fff; border-radius: 3px; padding: 1px 6px; margin-bottom: 6px;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filter-btn {
+    background: #fff; border: 1px solid var(--border); border-radius: 20px;
+    padding: 5px 14px; font-size: 12px; cursor: pointer; transition: all .2s;
+    color: #444;
+  }
+  .filter-btn:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+  .filter-btn.active { background: var(--blue-mid); color: #fff; border-color: var(--blue-mid); }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .compare-table th { background: var(--blue-dark); color: #fff; padding: 8px 10px; text-align: left; }
+  .compare-table td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+  .compare-table tr:nth-child(even) td { background: #f7f9fc; }
+  .check { color: #2E7D32; font-weight: 700; }
+  .cross { color: #c62828; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">🏔 2026 國家公園研討會</div>
+  <div class="tabs">
+    <button class="active" onclick="showTab('governance')">各國治理架構</button>
+    <button onclick="showTab('parks')">研討會保護區介紹</button>
+    <button onclick="showTab('compare')">工具橫向比較</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     TAB 1: GOVERNANCE
+═══════════════════════════════════════════ -->
+<div id="governance" class="panel active">
+<div class="page">
+  <div class="page-title">各國保護區治理架構</div>
+  <div class="page-sub">根據各講者簡報整理。部會原文名稱保留原文；中文為譯名輔助。</div>
+
+  <!-- 台灣 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇹🇼</span>
+      <div><div class="name">台灣 Taiwan</div><div class="note">多機關橫向分立，無統一主管</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <!-- L0 -->
+        <div class="tree-node">
+          <div class="box L0">行政院（最高決策）</div>
+          <div class="v-line"></div>
+          <!-- L1 row: three ministries -->
+          <div class="h-group" style="gap:0">
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L1">內政部</div>
+              <div class="v-line"></div>
+              <div class="box L2">國家公園署</div>
+              <div class="v-line"></div>
+              <div class="box L3">9 座國家公園
+陽明山・太魯閣
+玉山・墾丁・雪霸
+金門・東沙・台江
+澎湖南方四島</div>
+            </div>
+            <div style="width:40px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L1">農業部</div>
+              <div class="v-line"></div>
+              <div class="box L2">林業及自然保育署</div>
+              <div class="v-line"></div>
+              <div class="box L3" style="font-size:11px">22 自然保留區
+21 野生動物保護區
+39 野生動物重要棲息環境
+5 自然保護區・11 地質公園</div>
+            </div>
+            <div style="width:40px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L1">海洋委員會</div>
+              <div class="v-line"></div>
+              <div class="box L2">海洋保育署</div>
+              <div class="v-line"></div>
+              <div class="box L3">海洋保護區
+（跨法源整合
+漁業法・海洋保育法
+國家公園法）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="note-list" style="margin-top:16px">
+        <li>嚴格度：國家公園 ≈ 自然保留區（最嚴格）&gt; 野生動物保護區 &gt; 野生動物重要棲息環境</li>
+        <li>問題：三機關無橫向協調機制，海洋保護區跨法源，治理碎片化</li>
+        <li>2023《海洋保育法》施行，推動跨機關整合三層治理框架</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 日本 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇯🇵</span>
+      <div><div class="name">日本 Japan</div><div class="note">環境省統一主管，三層分級制</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <div class="tree-node">
+          <div class="box L0">環境省 Ministry of the Environment</div>
+          <div class="v-line"></div>
+          <div class="box L1">自然環境局 Nature Conservation Bureau</div>
+          <div class="v-line"></div>
+          <div class="h-group">
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">国立公園
+National Parks
+34 座</div>
+              <div class="v-line"></div>
+              <div class="box green" style="font-size:11px">環境省直管
+（IUCN Cat. II）</div>
+            </div>
+            <div style="width:30px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">国定公園
+Quasi-National Parks
+58 座</div>
+              <div class="v-line"></div>
+              <div class="box local" style="font-size:11px">都道府縣管
+（環境省認定）</div>
+            </div>
+            <div style="width:30px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">都道府縣立自然公園
+Prefectural Natural Parks
+309 座</div>
+              <div class="v-line"></div>
+              <div class="box local" style="font-size:11px">地方政府指定</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="note-list" style="margin-top:16px">
+        <li>环境省透過 WCPA 框架推廣 MEE，並積極向亞太地區分享 Green List 認證經驗</li>
+        <li>各園每年提交年度報告，但評量頻率各園不同，彈性較大</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 法國 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇫🇷</span>
+      <div><div class="name">法國 France</div><div class="note">OFB 整合平台，2020 年整併五機構</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <div class="tree-node">
+          <div class="h-group">
+            <div class="branch-col">
+              <div class="box L0" style="max-width:220px">Ministère de la Transition écologique
+生態轉型部</div>
+            </div>
+            <div style="width:30px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="box L0" style="max-width:220px">Ministère de l'Agriculture
+農業及食品部</div>
+            </div>
+          </div>
+          <!-- dual arrow down to OFB -->
+          <div class="v-line"></div>
+          <div class="box L1" style="max-width:500px">OFB — Office français de la biodiversité
+法國生物多樣性局（2020 年成立，3,000 人，年預算 6 億歐元）</div>
+          <div class="v-line"></div>
+          <div class="h-group">
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">Parcs Nationaux
+國家公園
+11 座</div>
+              <div class="v-line"></div>
+              <div class="box L3" style="font-size:11px">含海外省：
+瓜德洛普・法屬圭亞那
+留尼旺・馬約特・法屬南地</div>
+            </div>
+            <div style="width:20px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">Réserves Naturelles Nationales
+全國自然保護區
+165+ 座</div>
+            </div>
+            <div style="width:20px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">Parcs Naturels Marins
+海洋自然公園
+9 座</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- local level -->
+      <div style="margin-top:12px;padding:10px 14px;background:#fff8e1;border-radius:6px;border:1px solid #ffca28;font-size:12px;color:#6b4c00;">
+        <strong>地區層級（非 OFB）：</strong>
+        Parcs Naturels Régionaux（地區自然公園）58 座 ── 由地區委員會管理，屬保護 + 農業共存型
+      </div>
+      <ul class="note-list" style="margin-top:10px">
+        <li>OFB 前身：水務局（AFB）＋狩獵野生動物局（ONCFS）＋3 座國家公園前主管機關</li>
+        <li>雙部會共同監管（生態轉型部 + 農業部）— 但實際政策主導在生態轉型部</li>
+        <li>評量工具：OFB 自有框架＋部分採用 METT；個別公園正申請 IUCN Green List</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 德國 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇩🇪</span>
+      <div><div class="name">德國 Germany</div><div class="note">聯邦制，各州自治，無統一管理機構</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <div class="tree-node">
+          <div class="box L0" style="max-width:500px">聯邦政府 Federal Government
+Bundesnaturschutzgesetz（聯邦自然保護法）</div>
+          <div class="v-line"></div>
+          <div class="box L1" style="max-width:500px">BfN — Bundesamt für Naturschutz
+聯邦自然保護局（政策框架、標準制定）</div>
+          <div class="v-line"></div>
+          <div class="box L2" style="max-width:500px">16 個聯邦州 Bundesländer
+各州高度自治，可修改聯邦法規，各自管轄境內保護區</div>
+          <div class="v-line"></div>
+          <div class="h-group">
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L3">Nationalparke
+國家公園
+16 座</div>
+              <div class="v-line"></div>
+              <div class="box amber" style="font-size:11px">各由所在州政府管
+無全國統一機構</div>
+            </div>
+            <div style="width:20px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L3">Biosphärenreservate
+生物圈保護區
+18 座（UNESCO MAB）</div>
+            </div>
+            <div style="width:20px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L3">Naturparke
+自然公園
+104 座（多功能使用）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- coordinator -->
+      <div style="margin-top:12px;padding:10px 14px;background:#e8f5e9;border-radius:6px;border:1px solid #81c784;font-size:12px;color:#1b5e20;">
+        <strong>橫向協調：</strong>
+        NNA（德國國家自然遺產局）＋ LANA（自然保護暨景觀管理常委委員會）── 跨州協調，但無強制力
+      </div>
+      <ul class="note-list" style="margin-top:10px">
+        <li>評量體系：德國自有 42 項標準（2012 年建立，2024 年更新），明確表示「沒有刻意參考 IUCN」</li>
+        <li>評量週期：每十年一次（2012、2024），歐洲最系統化</li>
+        <li>Green List 興趣低：認為程序太複雜，現有框架已足夠</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 韓國 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇰🇷</span>
+      <div><div class="name">韓國 South Korea</div><div class="note">KNPS 集中統一管理，亞洲最積極對齊 IUCN</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <div class="tree-node">
+          <div class="box L0">環境部 Ministry of Environment</div>
+          <div class="v-line"></div>
+          <div class="box L1" style="max-width:480px">KNPS — Korea National Park Service
+韓國國家公園服務局（1987 年，總部：原州市 Wonju）</div>
+          <div class="v-line"></div>
+          <div class="h-group">
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">KNPS 直管
+22 座</div>
+              <div class="v-line"></div>
+              <div class="box green" style="font-size:11px">智異山 Jirisan
+雪嶽山 Seoraksan ✅ Green List
+北漢山 Bukhansan
+… 等 22 座</div>
+            </div>
+            <div style="width:30px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box local">地方政府管
+2 座</div>
+              <div class="v-line"></div>
+              <div class="box L3" style="font-size:11px">漢拏山 Hallasan
+（濟州道管）
+鷄龍山 Gyeryongsan
+（忠南道管）</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#e3f2fd;border-radius:6px;border:1px solid #64b5f6;font-size:12px;color:#0d47a1;">
+        <strong>研究機構：</strong>
+        NPRI — National Park Research Institute（韓國國家公園研究院）── 負責 MEE 框架研發與政策建議
+      </div>
+      <ul class="note-list" style="margin-top:10px">
+        <li>每 10 年制定《자연공원기본계획 自然公園基本計畫》作為全國方針</li>
+        <li>2005 年起將 16 座從 IUCN Category V 升至 Category II</li>
+        <li>雪嶽山（Seoraksan）已取得 IUCN Green List 認證，亞洲最積極推動</li>
+        <li>亞洲黑熊（반달가슴곰 Asiatic Black Bear）長年復育計畫，族群逐步回升</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 越南 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇻🇳</span>
+      <div><div class="name">越南 Vietnam</div><div class="note">林業總局主導，省人委是實際日常管理主體</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <div class="tree-node">
+          <div class="box L0" style="max-width:480px">Bộ Nông nghiệp và Môi trường
+農業暨環境部 Ministry of Agriculture and Environment</div>
+          <div class="v-line"></div>
+          <div class="box L1" style="max-width:480px">Cục Lâm nghiệp Việt Nam
+越南林業總局 Vietnam Forestry Administration
+（政策技術指導，直管跨省或重要國家公園）</div>
+          <div class="v-line"></div>
+          <div class="h-group">
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">30 座國家公園
+Vườn quốc gia</div>
+            </div>
+            <div style="width:16px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">58 座自然保護區
+Khu bảo tồn thiên nhiên</div>
+            </div>
+            <div style="width:16px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">10 座物種/棲地保護區</div>
+            </div>
+            <div style="width:16px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <div class="branch-col">
+              <div class="branch-top-line"></div>
+              <div class="box L2">46 座景觀保護區</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#fff8e1;border-radius:6px;border:1px solid #ffca28;font-size:12px;color:#6b4c00;">
+        <strong>實際日常管理：</strong>
+        Ủy ban Nhân dân tỉnh（省人民委員會 Provincial People's Committees）── 大多數保護區的真正執行者
+      </div>
+      <ul class="note-list" style="margin-top:10px">
+        <li>Cat Tien 卡蒂恩國家公園：2024 年取得 IUCN Green List 認證，為越南首個</li>
+        <li>資源不足是最大挑戰，WWF 協助推動認證過程</li>
+        <li>164 座保護區，總面積 2.8 百萬公頃，佔全國土地面積 8.4%</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 馬來西亞・沙巴 -->
+  <div class="country-block">
+    <div class="country-header">
+      <span class="flag">🇲🇾</span>
+      <div><div class="name">馬來西亞・沙巴 Malaysia / Sabah</div><div class="note">聯邦分治，沙巴高度自治，SIMCA 為研討會重點案例</div></div>
+    </div>
+    <div class="country-body">
+      <div class="org-tree">
+        <div class="tree-node">
+          <div class="box L0" style="max-width:500px">馬來西亞聯邦政府 Federal Government of Malaysia</div>
+          <div class="v-line"></div>
+          <div class="h-group">
+            <!-- Peninsular -->
+            <div class="branch-col" style="max-width:250px">
+              <div class="branch-top-line"></div>
+              <div class="box L1" style="max-width:220px">半島馬來西亞
+Peninsular Malaysia</div>
+              <div class="v-line"></div>
+              <div class="box L2">PERHILITAN
+野生動物與國家公園局</div>
+              <div class="v-line"></div>
+              <div class="box L3" style="font-size:11px">半島國家公園
+野生動物保護區</div>
+            </div>
+            <div style="width:30px;height:2px;background:#aaa;margin-top:18px;"></div>
+            <!-- Sabah -->
+            <div class="branch-col" style="max-width:320px">
+              <div class="branch-top-line"></div>
+              <div class="box L1" style="max-width:260px">沙巴州政府
+Sabah State Government</div>
+              <div class="v-line"></div>
+              <div class="box L2" style="max-width:260px">沙巴旅遊、文化與環境部
+Kementerian Pelancongan, Kebudayaan dan Alam Sekitar Sabah</div>
+              <div class="v-line"></div>
+              <div class="h-group">
+                <div class="branch-col">
+                  <div class="branch-top-line"></div>
+                  <div class="box green" style="font-size:11px">Sabah Parks
+沙巴公園局
+（國家公園）</div>
+                </div>
+                <div style="width:8px;height:2px;background:#aaa;margin-top:18px;"></div>
+                <div class="branch-col">
+                  <div class="branch-top-line"></div>
+                  <div class="box L3" style="font-size:11px">沙巴野生動物局
+（野生動物保護區）</div>
+                </div>
+                <div style="width:8px;height:2px;background:#aaa;margin-top:18px;"></div>
+                <div class="branch-col">
+                  <div class="branch-top-line"></div>
+                  <div class="box L3" style="font-size:11px">沙巴森林局
+（森林保護區）</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#e8f5e9;border-radius:6px;border:1px solid #81c784;font-size:12px;color:#1b5e20;">
+        <strong>SIMCA（Sugut-Imbak-Malua Conservation Area）：</strong>
+        沙巴北部，2022 年取得 IUCN Green List 認證，東南亞首個海洋保護區標竿，由 NGO Reef Guardian 主導
+      </div>
+      <ul class="note-list" style="margin-top:10px">
+        <li>沙巴高度自治，聯邦政府對沙巴保護區的管轄有限</li>
+        <li>協作共管框架（Multi-stakeholder co-management）是 SIMCA 成功關鍵</li>
+        <li>最大挑戰：備齊 Green List 所需的證據文件（evidence documentation）</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- .page -->
+</div><!-- #governance -->
+
+<!-- ═══════════════════════════════════════════
+     TAB 2: PARKS
+═══════════════════════════════════════════ -->
+<div id="parks" class="panel">
+<div class="page">
+  <div class="page-title">研討會提及之保護區</div>
+  <div class="page-sub">僅收錄講者簡報中明確提及的國家公園與保護區。</div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterParks('all', this)">全部</button>
+    <button class="filter-btn" onclick="filterParks('台灣', this)">🇹🇼 台灣</button>
+    <button class="filter-btn" onclick="filterParks('日本', this)">🇯🇵 日本</button>
+    <button class="filter-btn" onclick="filterParks('越南', this)">🇻🇳 越南</button>
+    <button class="filter-btn" onclick="filterParks('韓國', this)">🇰🇷 韓國</button>
+    <button class="filter-btn" onclick="filterParks('馬來西亞', this)">🇲🇾 馬來西亞</button>
+  </div>
+
+  <div class="parks-grid" id="parksGrid">
+
+    <!-- 陽明山 -->
+    <div class="park-card" data-country="台灣">
+      <div class="park-card-header">
+        <span class="flag">🇹🇼</span>
+        <div class="info">
+          <div class="session-badge">3.1</div>
+          <div class="park-name">陽明山國家公園</div>
+          <div class="park-name-en">Yangmingshan National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 新北・台北市</span>
+          <span class="tag area">11,334 公頃</span>
+          <span class="tag cat">IUCN Cat. II</span>
+        </div>
+        <p class="park-desc">大台北都會旁，大屯火山群形成的罕見都會型國家公園。地熱資源、溫泉、草原、杜鵑花海是主要特色。管理挑戰在於高遊客壓力與城市邊界模糊。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>台灣藍鵲（Taiwan Blue Magpie）</li>
+          <li>台灣獼猴（Formosan Macaque）</li>
+          <li>大屯杜鵑（Tataka Azalea）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🌋</span>
+        <span>大屯火山・都會型國家公園</span>
+      </div>
+    </div>
+
+    <!-- 雪霸 -->
+    <div class="park-card" data-country="台灣">
+      <div class="park-card-header">
+        <span class="flag">🇹🇼</span>
+        <div class="info">
+          <div class="session-badge">3.2</div>
+          <div class="park-name">雪霸國家公園</div>
+          <div class="park-name-en">Shei-Pa National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 苗栗・台中・新竹</span>
+          <span class="tag area">76,850 公頃</span>
+          <span class="tag cat">IUCN Cat. II</span>
+        </div>
+        <p class="park-desc">以雪山山脈為核心，台灣山岳型保護區代表。評量框架（EoH）操作分享為研討會重點：通盤檢討的土地管制工具與生態保育目標存在根本性工具錯配。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>台灣黑熊（Formosan Black Bear）</li>
+          <li>台灣長鬃山羊（Formosan Serow）</li>
+          <li>帝雉（Mikado Pheasant）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🏔</span>
+        <span>雪山山脈・高山生態系</span>
+      </div>
+    </div>
+
+    <!-- 墾丁 -->
+    <div class="park-card" data-country="台灣">
+      <div class="park-card-header">
+        <span class="flag">🇹🇼</span>
+        <div class="info">
+          <div class="session-badge">3.3</div>
+          <div class="park-name">墾丁國家公園</div>
+          <div class="park-name-en">Kenting National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 屏東縣恆春半島</span>
+          <span class="tag area">33,269 公頃（含海域）</span>
+          <span class="tag cat">IUCN Cat. II</span>
+        </div>
+        <p class="park-desc">台灣唯一熱帶型國家公園，陸域＋海域複合保護區。珊瑚礁生態系豐富，但高觀光壓力（年遊客超 700 萬）造成嚴重生態挑戰。研討會討論重點：海洋 PA 跨法源治理問題。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>珊瑚礁魚類（Coral Reef Fish）200+ 種</li>
+          <li>綠蠵龜（Green Sea Turtle）</li>
+          <li>琉球鳶（Ryukyu Scops Owl）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🌊</span>
+        <span>熱帶珊瑚礁・陸海複合型</span>
+      </div>
+    </div>
+
+    <!-- 玉山 -->
+    <div class="park-card" data-country="台灣">
+      <div class="park-card-header">
+        <span class="flag">🇹🇼</span>
+        <div class="info">
+          <div class="session-badge">3.4</div>
+          <div class="park-name">玉山國家公園</div>
+          <div class="park-name-en">Yushan National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 南投・嘉義・花蓮・高雄</span>
+          <span class="tag area">103,121 公頃</span>
+          <span class="tag cat">IUCN Cat. II</span>
+        </div>
+        <p class="park-desc">台灣最大陸域國家公園（1985 年），海拔 300–3,952 公尺（玉山主峰），垂直帶狀生態系完整。研討會中以 MEE 實作為例，是台灣最接近 IUCN Green List 標準的園區之一。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>台灣黑熊（Formosan Black Bear）</li>
+          <li>雲豹（Formosan Clouded Leopard，已滅絕，象徵意義）</li>
+          <li>山椒魚（Hynobius arisanensis）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">⛰</span>
+        <span>台灣最高峰 3,952 m・最大陸域 NP</span>
+      </div>
+    </div>
+
+    <!-- 太魯閣 -->
+    <div class="park-card" data-country="台灣">
+      <div class="park-card-header">
+        <span class="flag">🇹🇼</span>
+        <div class="info">
+          <div class="session-badge">3.5</div>
+          <div class="park-name">太魯閣國家公園</div>
+          <div class="park-name-en">Taroko National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 花蓮・台中・南投</span>
+          <span class="tag area">92,000 公頃</span>
+          <span class="tag cat">IUCN Cat. II</span>
+        </div>
+        <p class="park-desc">以太魯閣峽谷大理石地形聞名，同時面臨頻繁天然災害（地震、颱風、土石流）。研討會重點：重大天然災害（0403 花蓮地震）下 MEE 實踐的挑戰與缺口分析。簡報疑似以 AI（Gemini）輔助製作。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>台灣獼猴（Formosan Macaque）</li>
+          <li>台灣長鬃山羊（Formosan Serow）</li>
+          <li>台灣藍腹鷴（Swinhoe's Pheasant）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🏞</span>
+        <span>大理石峽谷・地震高風險區</span>
+      </div>
+    </div>
+
+    <!-- Cat Tien -->
+    <div class="park-card" data-country="越南">
+      <div class="park-card-header">
+        <span class="flag">🇻🇳</span>
+        <div class="info">
+          <div class="session-badge">4.1 / 4.2</div>
+          <div class="park-name">卡蒂恩國家公園</div>
+          <div class="park-name-en">Vườn Quốc gia Cát Tiên / Cat Tien National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 同奈省・林同省</span>
+          <span class="tag area">71,187 公頃</span>
+          <span class="tag cat">IUCN Cat. II</span>
+          <span class="tag gl">✅ Green List 2024（越南首個）</span>
+        </div>
+        <p class="park-desc">越南最重要的低地熱帶雨林，生物多樣性極高，橫跨兩省（同奈省 43,927 ha＋林同省 27,260 ha）。2024 年成為越南首個獲得 IUCN Green List 認證的保護區，由 WWF 協助推動。研討會重點：Camera Trap 小型哺乳類監測方法。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>爪哇犀牛（Javan Rhino，已於此地滅絕，2010 確認最後個體死亡）</li>
+          <li>亞洲象（Asian Elephant）</li>
+          <li>印度支那虎（Indochinese Tiger）</li>
+          <li>棕背水獺（Smooth-coated Otter）</li>
+          <li>大型靈貓（Large Indian Civet）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🌿</span>
+        <span>低地熱帶雨林・越南首個 Green List</span>
+      </div>
+    </div>
+
+    <!-- 雪嶽山 -->
+    <div class="park-card" data-country="韓國">
+      <div class="park-card-header">
+        <span class="flag">🇰🇷</span>
+        <div class="info">
+          <div class="session-badge">4.3</div>
+          <div class="park-name">雪嶽山國家公園</div>
+          <div class="park-name-en">설악산국립공원 / Seoraksan National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 江原道 Gangwon-do</span>
+          <span class="tag area">398 km²</span>
+          <span class="tag cat">IUCN Cat. II</span>
+          <span class="tag gl">✅ Green List 認證</span>
+        </div>
+        <p class="park-desc">韓國自然景觀代表，秋楓、奇岩、溪谷聞名。已取得 IUCN Green List 認證，是亞洲最積極對齊 IUCN 標準的國家公園之一。KNPS 長年在此進行亞洲黑熊復育計畫，族群逐步回升。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>亞洲黑熊（반달가슴곰 / Asiatic Black Bear）── KNPS 復育成功</li>
+          <li>Korean Goral 山羊羚（산양，極稀有）</li>
+          <li>Korean Marten 貂（Martes flavigula）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🍁</span>
+        <span>秋楓・奇岩・Green List 認證</span>
+      </div>
+    </div>
+
+    <!-- 智異山 -->
+    <div class="park-card" data-country="韓國">
+      <div class="park-card-header">
+        <span class="flag">🇰🇷</span>
+        <div class="info">
+          <div class="session-badge">4.3</div>
+          <div class="park-name">智異山國家公園</div>
+          <div class="park-name-en">지리산국립공원 / Jirisan National Park</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 全羅南道・慶尚南道・全羅北道</span>
+          <span class="tag area">483 km²（韓國最大）</span>
+          <span class="tag cat">IUCN Cat. II</span>
+        </div>
+        <p class="park-desc">韓國第一座國家公園（1967 年），面積最大，橫跨三個道。植物 1,800+ 種，垂直帶狀分布亞熱帶至高山，含稀有蘭花與韓國杜鵑。是韓國生物多樣性研究的核心基地。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>亞洲黑熊（Asiatic Black Bear）</li>
+          <li>Korean Azalea 韓國杜鵑</li>
+          <li>Siberian Flying Squirrel 西伯利亞飛鼠</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🌲</span>
+        <span>韓國第一座 NP・最大面積</span>
+      </div>
+    </div>
+
+    <!-- SIMCA -->
+    <div class="park-card" data-country="馬來西亞">
+      <div class="park-card-header">
+        <span class="flag">🇲🇾</span>
+        <div class="info">
+          <div class="session-badge">2.5</div>
+          <div class="park-name">SIMCA 蘇祿海海洋保護區</div>
+          <div class="park-name-en">Sugut-Imbak-Malua Conservation Area / Sulu Sea MPA</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 馬來西亞沙巴，蘇祿海（Sulu Sea），距沙打灣 Sandakan 約 80 km</span>
+          <span class="tag cat">IUCN Cat. II</span>
+          <span class="tag gl">✅ Green List 2022（東南亞海洋 PA 標竿）</span>
+        </div>
+        <p class="park-desc">東南亞最重要的海洋生物多樣性熱點之一。2022 年成為東南亞首個獲 IUCN Green List 認證的海洋保護區，由 NGO Reef Guardian 主導推動。協作共管框架（漁民、地方政府、NGO）是成功關鍵。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>海龜（Green Turtle / Hawksbill Turtle）產卵地</li>
+          <li>珊瑚礁（Coral Reef）── 三角形珊瑚三角（Coral Triangle）核心</li>
+          <li>儒艮（Dugong）</li>
+          <li>鯊魚與蝠鱝（Shark & Manta Ray）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🐠</span>
+        <span>東南亞首個海洋 Green List 認證</span>
+      </div>
+    </div>
+
+    <!-- 瓦登海 -->
+    <div class="park-card" data-country="德國">
+      <div class="park-card-header">
+        <span class="flag">🇩🇪</span>
+        <div class="info">
+          <div class="session-badge">2.4</div>
+          <div class="park-name">瓦登海國家公園</div>
+          <div class="park-name-en">Nationalpark Wattenmeer / Wadden Sea NPs</div>
+        </div>
+      </div>
+      <div class="park-card-body">
+        <div class="park-meta">
+          <span class="tag loc">📍 北海沿岸（德、荷、丹麥跨國）</span>
+          <span class="tag area">約 1,143,000 公頃</span>
+          <span class="tag cat">UNESCO 世界遺產</span>
+        </div>
+        <p class="park-desc">世界最大連續潮間帶生態系，跨越德國、荷蘭、丹麥三國，為 UNESCO 世界遺產（2009 年）。德國部分分為三個州立國家公園（石勒蘇益格-荷爾斯泰因、漢堡、下薩克森）。德國 MEE 評量重點案例。</p>
+        <div class="species-title">重點保育物種</div>
+        <ul class="species-list">
+          <li>灰海豹（Grey Seal）、港海豹（Harbour Seal）</li>
+          <li>候鳥中繼站（每年 1,200 萬隻候鳥）</li>
+          <li>歐洲鰻（European Eel）</li>
+        </ul>
+      </div>
+      <div class="park-img-placeholder">
+        <span class="icon">🌊</span>
+        <span>世界最大潮間帶・跨國保護區</span>
+      </div>
+    </div>
+
+  </div><!-- .parks-grid -->
+</div><!-- .page -->
+</div><!-- #parks -->
+
+<!-- ═══════════════════════════════════════════
+     TAB 3: COMPARE
+═══════════════════════════════════════════ -->
+<div id="compare" class="panel">
+<div class="page">
+  <div class="page-title">各國評量工具橫向比較</div>
+  <div class="page-sub">根據研討會各講者簡報整理。</div>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>國家 / 地區</th>
+        <th>主要評量工具</th>
+        <th>Green List 狀況</th>
+        <th>自有框架</th>
+        <th>對齊 IUCN</th>
+        <th>評量頻率</th>
+        <th>關鍵說明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🇹🇼 台灣</td>
+        <td>EoH（目標）<br>METT（實際）</td>
+        <td>尚未認證</td>
+        <td>無</td>
+        <td>嘗試中</td>
+        <td>不固定（個案）</td>
+        <td>EoH 質性太強、制度不穩定；MEE 尚在建立期</td>
+      </tr>
+      <tr>
+        <td>🇯🇵 日本</td>
+        <td>WCPA Framework</td>
+        <td>推廣中（非自身認證）</td>
+        <td>各園自有計畫</td>
+        <td><span class="check">✓</span> WCPA</td>
+        <td>各園不同</td>
+        <td>以推廣全球 MEE 框架為主；自身實施彈性較大</td>
+      </tr>
+      <tr>
+        <td>🇫🇷 法國</td>
+        <td>OFB 自有 + METT</td>
+        <td>個別公園申請中</td>
+        <td><span class="check">✓</span> OFB 框架</td>
+        <td>部分對齊</td>
+        <td>定期，依公園</td>
+        <td>OFB 整合後推動更系統化評量，對 Green List 持開放態度</td>
+      </tr>
+      <tr>
+        <td>🇩🇪 德國</td>
+        <td>德國自有<br>42 項標準體系</td>
+        <td>少有興趣</td>
+        <td><span class="check">✓</span> NNA/LANA</td>
+        <td><span class="cross">✗</span> 未刻意對齊<br>（巧合重疊）</td>
+        <td>十年一循環<br>（2012、2024）</td>
+        <td>明確說「沒有刻意參考 IUCN」；歐洲普遍認為 Green List 太複雜</td>
+      </tr>
+      <tr>
+        <td>🇰🇷 韓國</td>
+        <td>MEE（KNPS 框架）</td>
+        <td><span class="check">✅ 積極推動</span><br>雪嶽山已認證</td>
+        <td><span class="check">✓</span> KNPS</td>
+        <td><span class="check">✓</span> Cat. II</td>
+        <td>定期（10 年計畫）</td>
+        <td>亞洲最積極對齊 IUCN；雪嶽山已取得 Green List 認證</td>
+      </tr>
+      <tr>
+        <td>🇻🇳 越南<br>（Cat Tien）</td>
+        <td>Camera Trap 監測<br>+ 國家框架</td>
+        <td><span class="check">✅ Cat Tien 已認證</span><br>（2024，越南首個）</td>
+        <td>部分</td>
+        <td>部分</td>
+        <td>不固定</td>
+        <td>WWF 協助推動認證；資源不足是主要障礙</td>
+      </tr>
+      <tr>
+        <td>🇲🇾 SIMCA<br>（沙巴）</td>
+        <td>IUCN GL 標準<br>+ 自有監測</td>
+        <td><span class="check">✅ 已認證</span><br>（2022，東南亞海洋 PA 標竿）</td>
+        <td><span class="check">✓</span> 協作共管框架</td>
+        <td><span class="check">✓</span> GL 4 大組成</td>
+        <td>5 年一次（GL 要求）</td>
+        <td>NGO（Reef Guardian）主導；最大挑戰：備齊證據文件</td>
+      </tr>
+      <tr>
+        <td>歐洲（EUROPARC）</td>
+        <td>METT-4（最常用）<br>+ RAPPAM</td>
+        <td>少用（認為太複雜）</td>
+        <td>各國自有</td>
+        <td>部分</td>
+        <td>不固定</td>
+        <td>EUROPARC 自有「歐洲保護區文憑」作為卓越管理表彰</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div style="margin-top:24px;padding:16px 20px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.07)">
+    <div class="sec-label">關鍵觀察</div>
+    <ul class="note-list">
+      <li><strong>Green List 分歧：</strong>亞洲（韓、越、馬）積極擁抱；歐洲（德、法）態度保留，認為程序複雜且各國已有自有框架</li>
+      <li><strong>工具碎片化：</strong>全球目前沒有單一具公信力的統一評量標準，各國選擇不同工具，橫向比較困難</li>
+      <li><strong>資源瓶頸：</strong>METT、EoH 等工具要求的文件備齊成本，對資源不足的國家是主要障礙</li>
+      <li><strong>德國例外：</strong>唯一明確聲稱「不需要對齊 IUCN」的參與國，自有框架完整度最高</li>
+      <li><strong>台灣現況：</strong>EoH 目標明確但實施困難；制度工具（通盤檢討）與保育目標存在根本工具錯配</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function filterParks(country, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.park-card').forEach(card => {
+    if (country === 'all' || card.dataset.country === country) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>
